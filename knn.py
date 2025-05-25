@@ -52,17 +52,17 @@ def analyze_k_values(X_train, y_train, X_val, y_val, k_values):
 url = "https://raw.githubusercontent.com/professortiagoinfnet/inteligencia_artificial/main/heart.csv"
 data = load_data(url)
 
-# Identificar features e target
+# Identificando as features e o target
 features, target = identify_features_and_target(data)
 print("Features:", features)
 print("Target:", target)
 
-# Dividir os dados
+# Dividindo os dados em treino e validação
 X_train, X_val, y_train, y_val = split_data(data, features, target)
 print("Tamanho do conjunto de treino:", X_train.shape)
 print("Tamanho do conjunto de validação:", X_val.shape)
 
-# Transformar variáveis categóricas em numéricas
+# Transformando variáveis categóricas em variáveis dummy
 categorical_columns = X_train.select_dtypes(include=['object']).columns
 X_train = pd.get_dummies(X_train, columns=categorical_columns, drop_first=True)
 X_val = pd.get_dummies(X_val, columns=categorical_columns, drop_first=True)
@@ -70,15 +70,15 @@ X_val = pd.get_dummies(X_val, columns=categorical_columns, drop_first=True)
 # Padronizar os dados
 X_train_scaled, X_val_scaled = preprocess_data(X_train, X_val)
 
-# Treinar modelo inicial
+# Treinando o modelo
 k_initial = 3
 knn = train_knn(X_train_scaled, y_train, k_initial)
 
-# Avaliar modelo inicial
+# Avaliando o modelo
 accuracy = evaluate_model(knn, X_val_scaled, y_val)
 print(f"Acurácia do modelo com K={k_initial}: {accuracy:.2f}")
 
-# Analisar diferentes valores de K
+# Analisando os diferentes valores de K
 k_values = range(1, 21)
 best_k, accuracies = analyze_k_values(X_train_scaled, y_train, X_val_scaled, y_val, k_values)
 print(f"Melhor valor de K: {best_k} com acurácia de {max(accuracies):.2f}")
